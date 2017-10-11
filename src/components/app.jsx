@@ -7,7 +7,7 @@ export default class App extends Component {
   }
   render() {
     return (
-      <div className="app-root">React advanced starter</div>
+      <h1 className="app-root">Hello from React</h1>
     );
   }
 }

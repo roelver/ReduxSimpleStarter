@@ -1,12 +1,14 @@
 import _$ from 'jquery';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { MemoryRouter as Router } from 'react-router-dom';
 import TestUtils from 'react-dom/test-utils';
 import { JSDOM } from 'jsdom';
 import chai, { expect } from 'chai';
 import chaiJquery from 'chai-jquery';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import reduxThunk from 'redux-thunk';
 import reducers from '../src/reducers';
 
 // Setup a testing environment to run like a browser
@@ -22,9 +24,15 @@ chaiJquery(chai, chai.util, $);
 
 // Helper for rendering components
 function renderComponent(ComponentClass, props = {}, state = {}) {
+  const createStoreWithMiddleware = applyMiddleware(reduxThunk)(createStore);
+
+  const store = createStoreWithMiddleware(reducers, state);
+
   const componentInstance =  TestUtils.renderIntoDocument(
-    <Provider store={createStore(reducers, state)}>
-      <ComponentClass {...props} />
+    <Provider store={store}>
+      <Router>
+        <ComponentClass {...props} />
+      </Router>
     </Provider>
   );
 
